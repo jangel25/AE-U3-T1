@@ -116,7 +116,7 @@ productRouter.get("/:id",(req,res)=>{
 });
 productRouter.delete("/:id",(req,res)=>{
     const {id}=req.params;
-    Products.remove({_id:id})
+    Product.remove({_id:id})
     .then(data=>{
         res.status(200);
         res.json({
@@ -130,13 +130,13 @@ productRouter.delete("/:id",(req,res)=>{
         res.json({
             code:400,
             msg:'Ha ocurrido un error',
-            detail:data
+            detail:error
         });
     });
 });
 productRouter.put("/:id",(req,res)=>{
     const {id}=req.params;
-    Product.update({_id:id},{$set:{name:req.body.name}})
+    Product.findByIdAndUpdate({_id:id},{$set:{name:req.body.name}})
     .then(data=>{
         res.status(200),
         res.json({
@@ -235,12 +235,12 @@ userRouter.delete("/:id",(req,res)=>{
         res.json({
             code:400,
             msg:'Ha ocurrido un error',
-            detail:data
+            detail:error
         });
     });
 });
 userRouter.put("/:id",(req,res)=>{
-    User.update({_id:req.params},{$set:{password:req.body.password}})
+    User.findByIdAndUpdate({_id:req.params},{$set:{password:req.body.password}})
     .then(data=>{
         res.status(200),
         res.json({
