@@ -21,7 +21,7 @@ const productSchema=new mongoose.Schema({
         required: true
     }
 });
-const UserSchema=new mongoose.Schema({
+const userSchema=new mongoose.Schema({
     name:{
         firstname:{
             type: String,
@@ -32,6 +32,10 @@ const UserSchema=new mongoose.Schema({
             required: true
         }
     },
+    email:{
+        type: String,
+        required:true
+    },
     password:{
         type: String,
         required: true
@@ -40,7 +44,7 @@ const UserSchema=new mongoose.Schema({
 
 //Declarar modelo
 const Product=mongoose.model('Product',productSchema,'products');
-const User=mongoose.model('User',UserSchema,'users');
+const User=mongoose.model('User',userSchema,'users');
 
 //Definir endpoints
 const productRouter=express.Router();
@@ -130,9 +134,9 @@ productRouter.delete("/:id",(req,res)=>{
         });
     });
 });
-productRouter.put(":/id",(req,res)=>{
-    const {id}=req.body.params;
-    Product.update({_id:id},{$set:{name:id.name}})
+productRouter.put("/:id",(req,res)=>{
+    const {id}=req.params;
+    Product.update({_id:id},{$set:{name:req.body.name}})
     .then(data=>{
         res.status(200),
         res.json({
@@ -157,7 +161,7 @@ productRouter.put(":/id",(req,res)=>{
 
 //User endpoints
 userRouter.get("/",(req,res)=>{
-    Product.find({})
+    User.find({})
     .then(datos=>{
         res.status(200);
         res.json({
@@ -235,9 +239,8 @@ userRouter.delete("/:id",(req,res)=>{
         });
     });
 });
-userRouter.put(":/id",(req,res)=>{
-    const {id}=req.body.params;
-    User.update({_id:id},{$set:{firstName:id.firstName}})
+userRouter.put("/:id",(req,res)=>{
+    User.update({_id:req.params},{$set:{password:req.body.password}})
     .then(data=>{
         res.status(200),
         res.json({
@@ -255,9 +258,6 @@ userRouter.put(":/id",(req,res)=>{
         })
     });
     
-    //hacer update
-    //hacer un crud de usuarios con un modelo diferente, esquema con campos email, password y nombre
-    //name:{firstName:,lastName:}
 });
 
 let app=express();
@@ -269,7 +269,7 @@ app.use('/users',userRouter)
 
 //Configurar el servidor
 const server=require('http').Server(app);
-const port=3009;
+const port=3000;
 
 //Ejecutar el servidor
 server.listen(port);
